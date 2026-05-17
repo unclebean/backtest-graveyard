@@ -60,18 +60,30 @@ function HomePageInternal({ marketData, positions }: Readonly<HomePageProps>) {
         isSyncing = true;
         charts.forEach((targetChart) => {
           if (targetChart !== sourceChart) {
-            targetChart!.timeScale().setVisibleLogicalRange(range);
+            try {
+              targetChart!.timeScale().setVisibleLogicalRange(range);
+            } catch {
+              // Safe catch for disposed charts during replay tick sync
+            }
           }
         });
         isSyncing = false;
       };
-      sourceChart!.timeScale().subscribeVisibleLogicalRangeChange(handler);
+      try {
+        sourceChart!.timeScale().subscribeVisibleLogicalRangeChange(handler);
+      } catch {
+        // Safe catch for initial/disposed subscriptions
+      }
       return { chart: sourceChart, handler };
     });
 
     return () => {
       handlers.forEach(({ chart, handler }) => {
-        chart!.timeScale().unsubscribeVisibleLogicalRangeChange(handler);
+        try {
+          chart!.timeScale().unsubscribeVisibleLogicalRangeChange(handler);
+        } catch {
+          // Safe catch for already disposed charts on unmount/re-render
+        }
       });
     };
   }, [adxChart, rsiChart, candlestickChart]);
