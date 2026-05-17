@@ -339,11 +339,11 @@ export const CandlestickChartReplay = ({
 
   return (
     <div className="flex flex-col w-full h-full relative border border-white/10 rounded-lg overflow-hidden">
-      <div className="flex items-center justify-between bg-[#151924] border-b border-white/10 text-white p-4 z-10 shrink-0">
-        <div className="flex items-center gap-6">
-          <h4 className="text-xl font-bold">{title}</h4>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-[#151924] border-b border-white/10 text-white px-4 py-2 z-10 gap-4 shrink-0 sm:h-[52px]">
+        <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-6 w-full sm:w-auto">
+          <h4 className="text-lg font-bold tracking-tight">{title}</h4>
           {currentOrder && (
-            <div className="flex items-center gap-4 bg-white/5 px-4 py-2 rounded-lg">
+            <div className="flex items-center gap-4 bg-white/5 border border-white/10 px-4 py-0.5 rounded-lg w-full md:w-auto">
               <OrderDetailsView
                 order={currentOrder}
                 currentPrice={currentPrice}
@@ -351,13 +351,13 @@ export const CandlestickChartReplay = ({
             </div>
           )}
         </div>
-        <div>
+        <div className="w-full sm:w-auto flex justify-end">
           {!isPlaying ? (
-            <Button onClick={() => setIsPlaying(true)} className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white">
+            <Button size="sm" onClick={() => setIsPlaying(true)} className="w-full sm:w-auto flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white transition-colors duration-200">
               <PlayCircle className="w-4 h-4" /> Start Replay
             </Button>
           ) : (
-            <Button variant="secondary" onClick={() => setIsPlaying(false)} className="flex items-center gap-2 bg-neutral-700 hover:bg-neutral-600 text-white">
+            <Button size="sm" variant="secondary" onClick={() => setIsPlaying(false)} className="w-full sm:w-auto flex items-center justify-center gap-2 bg-neutral-700 hover:bg-neutral-600 text-white transition-colors duration-200">
               <PauseCircle className="w-4 h-4" /> Pause Replay
             </Button>
           )}

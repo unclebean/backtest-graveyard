@@ -254,31 +254,31 @@ export const CandlestickChartReplayWithPositions = ({
 
   return (
     <div className="flex flex-col w-full h-full relative border border-white/10 rounded-lg overflow-hidden">
-      <div className="flex items-center justify-between bg-[#151924] border-b border-white/10 text-white p-4 z-10 shrink-0">
-        <div className="flex items-center gap-6">
-          <h4 className="text-xl font-bold">{title}</h4>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <span className="text-xs bg-green-600 px-2 py-1 rounded font-bold">WIN</span>
-              <span className="font-bold text-lg">{win}</span>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-[#151924] border-b border-white/10 text-white px-4 py-2 z-10 gap-4 shrink-0 sm:h-[52px]">
+        <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-6 w-full sm:w-auto">
+          <h4 className="text-lg font-bold tracking-tight">{title}</h4>
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+            <div className="flex items-center gap-2 bg-green-500/10 border border-green-500/20 px-2.5 py-0.5 rounded-md text-green-400">
+              <span className="text-[10px] uppercase tracking-wider font-extrabold opacity-90">WIN</span>
+              <span className="font-bold text-xs sm:text-sm leading-none">{win}</span>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-xs bg-red-600 px-2 py-1 rounded font-bold">LOSS</span>
-              <span className="font-bold text-lg">{loss}</span>
+            <div className="flex items-center gap-2 bg-red-500/10 border border-red-500/20 px-2.5 py-0.5 rounded-md text-red-400">
+              <span className="text-[10px] uppercase tracking-wider font-extrabold opacity-90">LOSS</span>
+              <span className="font-bold text-xs sm:text-sm leading-none">{loss}</span>
             </div>
-            <div className="flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded">
-              <span className="text-xs text-neutral-400">Balance</span>
-              <span className="font-bold text-green-400">${balance.toFixed(2)}</span>
+            <div className="flex items-center gap-2 bg-white/5 border border-white/10 px-3 py-0.5 rounded-md">
+              <span className="text-[10px] text-neutral-400 uppercase tracking-wider font-semibold">Balance</span>
+              <span className="font-bold text-green-400 text-xs sm:text-sm leading-none">${balance.toFixed(2)}</span>
             </div>
           </div>
         </div>
-        <div>
+        <div className="w-full sm:w-auto flex justify-end">
           {!isPlaying ? (
-            <Button onClick={() => setIsPlaying(true)} className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white">
+            <Button size="sm" onClick={() => setIsPlaying(true)} className="w-full sm:w-auto flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white transition-colors duration-200">
               <PlayCircle className="w-4 h-4" /> Start Replay
             </Button>
           ) : (
-            <Button variant="secondary" onClick={() => setIsPlaying(false)} className="flex items-center gap-2 bg-neutral-700 hover:bg-neutral-600 text-white">
+            <Button size="sm" variant="secondary" onClick={() => setIsPlaying(false)} className="w-full sm:w-auto flex items-center justify-center gap-2 bg-neutral-700 hover:bg-neutral-600 text-white transition-colors duration-200">
               <PauseCircle className="w-4 h-4" /> Pause Replay
             </Button>
           )}

@@ -19,7 +19,7 @@ export const OrdersTable = ({ orders }: { orders: OrderLog[] }) => {
 
   return (
     <div className="w-[300px] border border-white/10 bg-[#151924] flex flex-col hidden md:flex shrink-0 rounded-lg overflow-hidden sticky top-4 max-h-[calc(100vh-88px)]">
-      <div className="p-4 border-b border-white/10 bg-[#151924] font-bold text-sm text-white shrink-0">
+      <div className="p-4 border-b border-white/10 bg-[#151924] font-bold text-sm text-white shrink-0 sm:h-[52px] flex items-center">
         Executed Orders
       </div>
       <div ref={tableScrollRef} className="flex-1 overflow-y-auto p-2 scroll-smooth bg-[#0a0a0a]">
