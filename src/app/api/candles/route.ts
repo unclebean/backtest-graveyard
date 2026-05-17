@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
-import sqlite3 from 'sqlite3';
-import { open } from 'sqlite';
 import { parse } from 'csv-parse/sync';
 import dayjs from 'dayjs';
 import { isForex } from '@/lib/utils';
@@ -29,20 +27,22 @@ interface CandleBar {
 
 const positionsMap = new Map<string, Position[]>();
 
-async function initialLoadPositions(strategy: string) {
-  const db = await open({
-    filename: path.join(process.cwd(), 'db/konjac2.db'),
-    driver: sqlite3.Database,
-  });
+async function queryFromJSON(strategy: string) {
+  const cached = positionsMap.get(strategy);
+  if (cached) {
+    return cached.map((position) => ({
+      ...position,
+      time: Math.floor(dayjs(position.time).unix()),
+    }));
+  }
 
-  const rows = await db.all(
-    `SELECT *
-         FROM trade
-         WHERE strategy = '${strategy}'
-         AND entry_date is not null 
-         AND exit_date is not null
-         ORDER BY entry_date ASC`,
-  );
+  const jsonPath = path.join(process.cwd(), `public/data/trades/${strategy}.json`);
+  if (!fs.existsSync(jsonPath)) {
+    return [];
+  }
+
+  const fileContent = fs.readFileSync(jsonPath, 'utf8');
+  const rows = JSON.parse(fileContent);
 
   const positions = [] as Position[];
   for (const row of rows) {
@@ -86,18 +86,9 @@ async function initialLoadPositions(strategy: string) {
       });
     }
   }
+
   positionsMap.set(strategy, positions);
-  return positions;
-}
-
-// Use SQLite from local file
-async function queryFromSQLite(strategy: string) {
-  let positions = positionsMap.get(strategy);
-  if (!positions || positions?.length === 0) {
-    positions = await initialLoadPositions(strategy);
-  }
-
-  return positions?.map((position) => ({
+  return positions.map((position) => ({
     ...position,
     time: Math.floor(dayjs(position.time).unix()),
   }));
@@ -135,7 +126,7 @@ export async function GET(req: NextRequest) {
   const strategy = searchParams.get('strategy') ?? '';
   const startDate = searchParams.get('startDate') ?? '2024-01-01 00:00:00';
   const marketData = readCSV(symbol, startDate);
-  const positions = await queryFromSQLite(strategy);
+  const positions = await queryFromJSON(strategy);
   return NextResponse.json({
     marketData: marketData,
     positions: positions,

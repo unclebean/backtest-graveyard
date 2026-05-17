@@ -1,29 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { open } from 'sqlite';
 import path from 'path';
-import sqlite3 from 'sqlite3';
-import { IMarketRaw } from '@/types/trade';
+import { IMarketRaw, ITrade } from '@/types/trade';
 import fs from 'fs';
 import { parse } from 'csv-parse/sync';
 import { isForex } from '@/lib/utils';
 
 const getAllTrades = async (symbol: string, strategy: string) => {
-  const db = await open({
-    filename: path.join(process.cwd(), 'db/konjac2.db'),
-    driver: sqlite3.Database,
-  });
-
-  const tradeSymbol = isForex(symbol) ? `${symbol}_USD` : `${symbol}_USDT:USDT`;
-
-  const trades = await db.all(
-    `SELECT *
-         FROM trade
-         WHERE strategy = '${strategy}'
-         AND symbol = '${tradeSymbol}'
-         AND entry_date is not null
-         AND exit_date is not null
-         ORDER BY entry_date ASC`,
-  );
+  const jsonPath = path.join(process.cwd(), `public/data/trades/${strategy}.json`);
+  let trades = [] as ITrade[];
+  
+  if (fs.existsSync(jsonPath)) {
+    const fileContent = fs.readFileSync(jsonPath, 'utf8');
+    const allTrades = JSON.parse(fileContent) as ITrade[];
+    const tradeSymbol = isForex(symbol) ? `${symbol}_USD` : `${symbol}_USDT:USDT`;
+    
+    trades = allTrades
+      .filter((t: ITrade) => t.symbol === tradeSymbol && t.entry_date !== null && t.exit_date !== null)
+      .sort((a: ITrade, b: ITrade) => a.entry_date.localeCompare(b.entry_date));
+  }
 
   const csvFileName = isForex(symbol)
     ? `${symbol}_USD_1_0.csv`
@@ -37,14 +31,18 @@ const getAllTrades = async (symbol: string, strategy: string) => {
     skip_empty_lines: true,
   });
 
-  const initialCandleBar = records.find(
+  const firstTrade = trades.at(0);
+  const secondTrade = trades.at(1);
+
+  const initialCandleBar = (firstTrade && records.find(
     (record) =>
-      record.date === trades.at(0).entry_date.replaceAll('.000000', ''),
-  ) ?? { close: 0 };
-  const finalCandleBar = records.find(
+      record.date === firstTrade.entry_date.replaceAll('.000000', ''),
+  )) ?? { close: 0 };
+
+  const finalCandleBar = (secondTrade && records.find(
     (record) =>
-      record.date === trades.at(1).exit_date.replaceAll('.000000', ''),
-  ) ?? { close: 0 };
+      record.date === secondTrade.exit_date.replaceAll('.000000', ''),
+  )) ?? { close: 0 };
 
   return {
     trades,

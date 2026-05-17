@@ -8,7 +8,6 @@ import {
 
 const strategies = [
   { path: '/adx_fib_pullback', title: 'ADX Fib Pullback', description: 'Trend continuation strategy using ADX and Fibonacci retracements.', icon: Activity, category: 'Trend Following' },
-  { path: '/trend_pullback', title: 'Trend Pullback', description: 'Classic pullback strategy entering on minor retracements in a trend.', icon: TrendingUp, category: 'Trend Following' },
   { path: '/vwap_momentum', title: 'VWAP Momentum', description: 'Intraday momentum strategy anchored on Volume Weighted Average Price.', icon: BarChart2, category: 'Momentum' },
   { path: '/bb_ha_momentum', title: 'BB HA Momentum', description: 'Momentum trading utilizing Heikin Ashi candles and Bollinger Bands.', icon: Zap, category: 'Momentum' },
   { path: '/cci_ema', title: 'CCI EMA', description: 'Trend filtering with EMA and momentum entry via CCI.', icon: Target, category: 'Trend Following' },
@@ -18,6 +17,7 @@ const strategies = [
   { path: '/heikinashi_supper_trend', title: 'HA SuperTrend', description: 'Strong trend capture using Heikin Ashi and the SuperTrend indicator.', icon: ArrowUpRight, category: 'Trend Following' },
   { path: '/ppo', title: 'PPO', description: 'Percentage Price Oscillator strategy for momentum and divergence.', icon: Crosshair, category: 'Oscillator' },
   { path: '/stoch_hma', title: 'Stoch HMA', description: 'Hull Moving Average with Stochastic Oscillator for smooth reversals.', icon: Activity, category: 'Reversal' },
+  { path: '/trend_pullback', title: 'Trend Pullback', description: 'Classic pullback strategy entering on minor retracements in a trend.', icon: TrendingUp, category: 'Trend Following' },
   { path: '/stoch_macd', title: 'Stoch MACD', description: 'Confluence strategy using Stochastic and MACD for confirmation.', icon: Layers, category: 'Momentum' },
   { path: '/bb_adx_rsi', title: 'BB ADX RSI', description: 'Combines Bollinger Bands, ADX, and RSI for high-probability setups.', icon: Layers, category: 'Oscillator' },
 ];
