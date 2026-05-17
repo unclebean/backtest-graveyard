@@ -18,7 +18,7 @@ export default function RootLayout({
       <body className="bg-black text-white min-h-screen flex flex-col">
         <Providers>
           <nav className="w-full border-b border-white/10 bg-[#0a0a0a]">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="px-4">
               <div className="flex items-center justify-between h-14">
                 <Link href="/" className="flex items-center gap-2 text-indigo-400 hover:text-indigo-300 transition-colors">
                   <LineChart className="w-5 h-5" />
