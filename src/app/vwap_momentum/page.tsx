@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import type { CandlestickData } from 'lightweight-charts';
 import { CandlestickChartReplayWithPositions } from '@/components/CandlestickChartReplayWithPositions';
 import { IChartApi } from 'lightweight-charts';
@@ -13,6 +13,8 @@ import { useAdxChart } from '@/hooks/useAdxChart';
 import { useVwap } from '@/hooks/useVwap';
 import { useVwapData } from '@/hooks/useVwapData';
 import { IVwap } from '@/types/trade';
+
+import { useChartSync } from '@/hooks/useChartSync';
 
 const SYMBOL = 'ETH';
 const STRATEGY = 'vwap_momentum';
@@ -33,10 +35,11 @@ function HomePageInternal({
   const [candlestickChart, setChart] = useState<IChartApi>();
   const [executedOrders, setExecutedOrders] = useState<OrderLog[]>([]);
   const indicatorChartRef = useRef<HTMLDivElement>(null);
+  const mainChartContainerRef = useRef<HTMLDivElement>(null);
 
   const [showOverlay, setShowOverlay] = useState(true);
   const [candles, setCandles] = useState([] as CandlestickData[]);
-          const [isDone, setIsDone] = useState(false);
+  const [isDone, setIsDone] = useState(false);
 
   const onFinish = useCallback(() => {
     setIsDone(true);
@@ -68,32 +71,7 @@ function HomePageInternal({
     vwap,
   });
 
-  useEffect(() => {
-    let isSyncing = false;
-    const charts = [adxChart, candlestickChart].filter(Boolean);
-
-    const handlers = charts.map((sourceChart) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const handler = (range: any) => {
-        if (!range || isSyncing) return;
-        isSyncing = true;
-        charts.forEach((targetChart) => {
-          if (targetChart !== sourceChart) {
-            targetChart!.timeScale().setVisibleLogicalRange(range);
-          }
-        });
-        isSyncing = false;
-      };
-      sourceChart!.timeScale().subscribeVisibleLogicalRangeChange(handler);
-      return { chart: sourceChart, handler };
-    });
-
-    return () => {
-      handlers.forEach(({ chart, handler }) => {
-        chart!.timeScale().unsubscribeVisibleLogicalRangeChange(handler);
-      });
-    };
-  }, [adxChart, candlestickChart]);
+  useChartSync([candlestickChart, adxChart], [mainChartContainerRef, indicatorChartRef]);
 
   if (showOverlay || isDone) {
     return (
@@ -112,7 +90,7 @@ function HomePageInternal({
   return (
     <main className="p-4 bg-black min-h-[calc(100vh-56px)] flex flex-row gap-4">
       <div className="flex-1 flex flex-col gap-4 min-w-0 overflow-hidden">
-        <div className="flex-1 min-h-[400px]">
+        <div ref={mainChartContainerRef} className="flex-1 min-h-[400px]">
             <CandlestickChartReplayWithPositions
               onOrdersUpdate={setExecutedOrders}
               title="ETH/USDT"

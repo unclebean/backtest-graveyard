@@ -3,10 +3,12 @@
 import type { CandlestickData, IChartApi } from 'lightweight-charts';
 import { useReplayData } from '@/hooks/useChartReplayData';
 import { CandlestickChartReplay } from '@/components/CandlestickChartReplay';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Square } from 'lucide-react';
 import { useMACDChart } from '@/hooks/useMACDChart';
 import { OrderLog, OrdersTable } from '@/components/OrdersTable';
+
+import { useChartSync } from '@/hooks/useChartSync';
 
 interface HomePageProps {
   marketData: CandlestickData[];
@@ -16,6 +18,7 @@ function HomePageInternal({ marketData }: Readonly<HomePageProps>) {
   const [chart, setChart] = useState<IChartApi>();
   const [executedOrders, setExecutedOrders] = useState<OrderLog[]>([]);
   const indicatorChartRef = useRef<HTMLDivElement>(null);
+  const mainChartContainerRef = useRef<HTMLDivElement>(null);
   const [candles, setCandles] = useState([] as CandlestickData[]);
 
   const { macdChart } = useMACDChart({
@@ -24,37 +27,12 @@ function HomePageInternal({ marketData }: Readonly<HomePageProps>) {
     height: 300,
   });
 
-  useEffect(() => {
-    let isSyncing = false;
-    const charts = [chart, macdChart].filter(Boolean);
-
-    const handlers = charts.map((sourceChart) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const handler = (range: any) => {
-        if (!range || isSyncing) return;
-        isSyncing = true;
-        charts.forEach((targetChart) => {
-          if (targetChart !== sourceChart) {
-            targetChart!.timeScale().setVisibleLogicalRange(range);
-          }
-        });
-        isSyncing = false;
-      };
-      sourceChart!.timeScale().subscribeVisibleLogicalRangeChange(handler);
-      return { chart: sourceChart, handler };
-    });
-
-    return () => {
-      handlers.forEach(({ chart, handler }) => {
-        chart!.timeScale().unsubscribeVisibleLogicalRangeChange(handler);
-      });
-    };
-  }, [macdChart, chart]);
+  useChartSync([chart, macdChart], [mainChartContainerRef, indicatorChartRef]);
 
   return (
     <main className="p-4 bg-black min-h-[calc(100vh-56px)] flex flex-row gap-4">
       <div className="flex-1 flex flex-col gap-4 min-w-0 overflow-hidden">
-        <div className="flex-1 min-h-[400px]">
+        <div ref={mainChartContainerRef} className="flex-1 min-h-[400px]">
           <CandlestickChartReplay
               onOrdersUpdate={setExecutedOrders}
             candlesticks={marketData}

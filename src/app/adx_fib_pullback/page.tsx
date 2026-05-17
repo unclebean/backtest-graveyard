@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import type { CandlestickData, IChartApi } from 'lightweight-charts';
 import { Position } from '@/types/chart';
 import { OrderLog, OrdersTable } from '@/components/OrdersTable';
@@ -9,6 +9,8 @@ import StrategyStatsCard from '@/components/StrategyStatsCard';
 
 import { useAdxChart } from '@/hooks/useAdxChart';
 import { CandlestickChartReplayWithPositions } from '@/components/CandlestickChartReplayWithPositions';
+
+import { useChartSync } from '@/hooks/useChartSync';
 
 const SYMBOL = 'DOGE';
 const STRATEGY = 'adx_fib_pullback';
@@ -25,6 +27,7 @@ function HomePageInternal({ marketData, positions }: Readonly<HomePageProps>) {
   const [chart, setChart] = useState<IChartApi>();
   const [executedOrders, setExecutedOrders] = useState<OrderLog[]>([]);
   const indicatorChartRef = useRef<HTMLDivElement>(null);
+  const mainChartContainerRef = useRef<HTMLDivElement>(null);
 
   const [showOverlay, setShowOverlay] = useState(true);
   const [candles, setCandles] = useState([] as CandlestickData[]);
@@ -35,37 +38,7 @@ function HomePageInternal({ marketData, positions }: Readonly<HomePageProps>) {
     height: 300,
   });
 
-  useEffect(() => {
-    if (showOverlay) return;
-      }, [adxChart, marketData, positions, showOverlay]);
-
-  useEffect(() => {
-    let isSyncing = false;
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const syncToAdx = (range: any) => {
-      if (!range || isSyncing) return;
-      isSyncing = true;
-      adxChart?.timeScale().setVisibleLogicalRange(range);
-      isSyncing = false;
-    };
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const syncToChart = (range: any) => {
-      if (!range || isSyncing) return;
-      isSyncing = true;
-      chart?.timeScale().setVisibleLogicalRange(range);
-      isSyncing = false;
-    };
-
-    chart?.timeScale().subscribeVisibleLogicalRangeChange(syncToAdx);
-    adxChart?.timeScale().subscribeVisibleLogicalRangeChange(syncToChart);
-
-    return () => {
-      chart?.timeScale().unsubscribeVisibleLogicalRangeChange(syncToAdx);
-      adxChart?.timeScale().unsubscribeVisibleLogicalRangeChange(syncToChart);
-    };
-  }, [adxChart, chart]);
+  useChartSync([chart, adxChart], [mainChartContainerRef, indicatorChartRef]);
 
   if (showOverlay) {
     return (
@@ -84,7 +57,7 @@ function HomePageInternal({ marketData, positions }: Readonly<HomePageProps>) {
   return (
     <main className="p-4 bg-black min-h-[calc(100vh-56px)] flex flex-row gap-4">
       <div className="flex-1 flex flex-col gap-4 min-w-0 overflow-hidden">
-        <div className="flex-1 min-h-[400px]">
+        <div ref={mainChartContainerRef} className="flex-1 min-h-[400px]">
             <CandlestickChartReplayWithPositions
               onOrdersUpdate={setExecutedOrders}
               title={TITLE}
