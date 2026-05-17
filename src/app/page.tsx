@@ -1,14 +1,15 @@
 'use client';
 
 import Link from 'next/link';
-import { 
-  Activity, TrendingUp, BarChart2, Zap, ArrowUpRight, CheckCircle2, 
-  Target, Crosshair, Layers 
+import {
+  Activity, TrendingUp, BarChart2, Zap, ArrowUpRight, CheckCircle2,
+  Target, Crosshair, Layers
 } from 'lucide-react';
 
 const strategies = [
   { path: '/adx_fib_pullback', title: 'ADX Fib Pullback', description: 'Trend continuation strategy using ADX and Fibonacci retracements.', icon: Activity, category: 'Trend Following' },
-  { path: '/bb_adx_rsi', title: 'BB ADX RSI', description: 'Combines Bollinger Bands, ADX, and RSI for high-probability setups.', icon: Layers, category: 'Oscillator' },
+  { path: '/trend_pullback', title: 'Trend Pullback', description: 'Classic pullback strategy entering on minor retracements in a trend.', icon: TrendingUp, category: 'Trend Following' },
+  { path: '/vwap_momentum', title: 'VWAP Momentum', description: 'Intraday momentum strategy anchored on Volume Weighted Average Price.', icon: BarChart2, category: 'Momentum' },
   { path: '/bb_ha_momentum', title: 'BB HA Momentum', description: 'Momentum trading utilizing Heikin Ashi candles and Bollinger Bands.', icon: Zap, category: 'Momentum' },
   { path: '/cci_ema', title: 'CCI EMA', description: 'Trend filtering with EMA and momentum entry via CCI.', icon: Target, category: 'Trend Following' },
   { path: '/double_cci', title: 'Double CCI', description: 'Dual timeframe Commodity Channel Index strategy for robust entries.', icon: Target, category: 'Oscillator' },
@@ -18,8 +19,7 @@ const strategies = [
   { path: '/ppo', title: 'PPO', description: 'Percentage Price Oscillator strategy for momentum and divergence.', icon: Crosshair, category: 'Oscillator' },
   { path: '/stoch_hma', title: 'Stoch HMA', description: 'Hull Moving Average with Stochastic Oscillator for smooth reversals.', icon: Activity, category: 'Reversal' },
   { path: '/stoch_macd', title: 'Stoch MACD', description: 'Confluence strategy using Stochastic and MACD for confirmation.', icon: Layers, category: 'Momentum' },
-  { path: '/trend_pullback', title: 'Trend Pullback', description: 'Classic pullback strategy entering on minor retracements in a trend.', icon: TrendingUp, category: 'Trend Following' },
-  { path: '/vwap_momentum', title: 'VWAP Momentum', description: 'Intraday momentum strategy anchored on Volume Weighted Average Price.', icon: BarChart2, category: 'Momentum' },
+  { path: '/bb_adx_rsi', title: 'BB ADX RSI', description: 'Combines Bollinger Bands, ADX, and RSI for high-probability setups.', icon: Layers, category: 'Oscillator' },
 ];
 
 export default function HomePage() {
@@ -34,20 +34,20 @@ export default function HomePage() {
             Backtest Graveyard
           </h1>
           <p className="max-w-2xl mx-auto text-lg text-neutral-400">
-            A comprehensive visualization dashboard for algorithmic trading strategies. 
+            A comprehensive visualization dashboard for algorithmic trading strategies.
             Explore backtest results, equity curves, and performance metrics.
           </p>
         </header>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {strategies.map((strategy) => (
-            <Link 
-              key={strategy.path} 
+            <Link
+              key={strategy.path}
               href={strategy.path}
               className="group relative flex flex-col p-6 rounded-2xl bg-white/[0.03] border border-white/10 hover:bg-white/[0.06] transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1 hover:shadow-2xl hover:shadow-indigo-500/10 overflow-hidden"
             >
               <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-              
+
               <div className="flex items-center gap-4 mb-4">
                 <div className="p-3 rounded-xl bg-indigo-500/10 text-indigo-400 group-hover:bg-indigo-500/20 group-hover:scale-110 transition-all duration-300">
                   <strategy.icon className="w-6 h-6" />
@@ -61,7 +61,7 @@ export default function HomePage() {
                   </h3>
                 </div>
               </div>
-              
+
               <p className="text-sm text-neutral-400 leading-relaxed group-hover:text-neutral-300 transition-colors mt-auto">
                 {strategy.description}
               </p>
