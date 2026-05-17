@@ -24,12 +24,15 @@ export const useVwap = ({
       prevChartRef.current = candlesChart;
     }
 
-    if (candlesticks.length === 0) return;
-
-    if (lastLengthRef.current > 0 && candlesticks.length === lastLengthRef.current + 1 && vwap.length > 0) {
-      seriesRef.current.update(vwap[vwap.length - 1]);
+    if (candlesticks.length === 0 || vwap.length === 0) return;
+    
+    const currentTickTime = candlesticks[candlesticks.length - 1].time;
+    const vwapLine = vwap.filter((v) => v.time <= currentTickTime);
+    
+    if (lastLengthRef.current > 0 && candlesticks.length === lastLengthRef.current + 1 && vwapLine.length > 0) {
+      seriesRef.current.update(vwapLine[vwapLine.length - 1]);
     } else if (candlesticks.length !== lastLengthRef.current) {
-      seriesRef.current.setData(vwap);
+      seriesRef.current.setData(vwapLine);
     }
     lastLengthRef.current = candlesticks.length;
   }, [candlesChart, candlesticks, color, vwap]);
