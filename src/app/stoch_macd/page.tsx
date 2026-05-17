@@ -41,29 +41,44 @@ function HomePageInternal({ marketData, positions }: Readonly<HomePageProps>) {
     indicatorChartRef: macdIndicatorCharthRef,
   });
 
+  const activeSourceChartRef = useRef<IChartApi | null>(null);
+
   useEffect(() => {
-    let isSyncing = false;
-    const charts = [stochChart, macdChart, candlestickChart].filter(Boolean);
+    const charts = [stochChart, macdChart, candlestickChart].filter(Boolean) as IChartApi[];
 
     const handlers = charts.map((sourceChart) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const handler = (range: any) => {
-        if (!range || isSyncing) return;
-        isSyncing = true;
+        if (!range || activeSourceChartRef.current !== sourceChart) return;
+        
         charts.forEach((targetChart) => {
           if (targetChart !== sourceChart) {
-            targetChart!.timeScale().setVisibleLogicalRange(range);
+            try {
+              const targetRange = targetChart.timeScale().getVisibleLogicalRange();
+              if (!targetRange || Math.abs(targetRange.from - range.from) > 0.5 || Math.abs(targetRange.to - range.to) > 0.5) {
+                targetChart.timeScale().setVisibleLogicalRange(range);
+              }
+            } catch {
+              // Safe catch for disposed charts during replay tick sync
+            }
           }
         });
-        isSyncing = false;
       };
-      sourceChart!.timeScale().subscribeVisibleLogicalRangeChange(handler);
+      try {
+        sourceChart.timeScale().subscribeVisibleLogicalRangeChange(handler);
+      } catch {
+        // Safe catch for initial/disposed subscriptions
+      }
       return { chart: sourceChart, handler };
     });
 
     return () => {
       handlers.forEach(({ chart, handler }) => {
-        chart!.timeScale().unsubscribeVisibleLogicalRangeChange(handler);
+        try {
+          chart.timeScale().unsubscribeVisibleLogicalRangeChange(handler);
+        } catch {
+          // Safe catch for already disposed charts on unmount/re-render
+        }
       });
     };
   }, [stochChart, macdChart, candlestickChart]);
@@ -115,7 +130,7 @@ function HomePageInternal({ marketData, positions }: Readonly<HomePageProps>) {
           </div>
         </StrategyDetails>
       )}
-        <div className="flex-1 min-h-[400px]">
+        <div className="flex-1 min-h-[400px]" onMouseEnter={() => activeSourceChartRef.current = candlestickChart || null} onTouchStart={() => activeSourceChartRef.current = candlestickChart || null}>
           <CandlestickChartReplayWithPositions
               onOrdersUpdate={setExecutedOrders}
               title="ETH/USDT"
@@ -127,13 +142,13 @@ function HomePageInternal({ marketData, positions }: Readonly<HomePageProps>) {
               onTick={setCandles}
             />
         </div>
-        <div className="relative h-[150px] shrink-0 border border-white/10 rounded-lg overflow-hidden">
+        <div className="relative h-[150px] shrink-0 border border-white/10 rounded-lg overflow-hidden" onMouseEnter={() => activeSourceChartRef.current = macdChart || null} onTouchStart={() => activeSourceChartRef.current = macdChart || null}>
           <div className="absolute z-10 top-2.5 left-2 bg-black/80 p-1 rounded text-sm text-white">
             MACD 12 26 9
           </div>
           <div ref={macdIndicatorCharthRef} className="w-full h-full" />
         </div>
-        <div className="relative h-[150px] shrink-0 border border-white/10 rounded-lg overflow-hidden">
+        <div className="relative h-[150px] shrink-0 border border-white/10 rounded-lg overflow-hidden" onMouseEnter={() => activeSourceChartRef.current = stochChart || null} onTouchStart={() => activeSourceChartRef.current = stochChart || null}>
           <div className="absolute z-10 top-2.5 left-2 bg-black/80 p-1 rounded text-sm text-white">
             STOCH 12 6
           </div>
