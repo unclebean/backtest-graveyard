@@ -25,13 +25,13 @@ function HomePageInternal({ marketData, positions }: Readonly<HomePageProps>) {
 
   const [showOverlay, setShowOverlay] = useState(true);
   const [candles, setCandles] = useState([] as CandlestickData[]);
-        const [isDone, setIsDone] = useState(false);
+  const [isDone, setIsDone] = useState(false);
 
   const onFinish = useCallback(() => {
     setIsDone(true);
   }, []);
 
-  
+
   useEma({
     candlesChart: candlestickChart,
     candlesticks: candles,
@@ -95,46 +95,46 @@ function HomePageInternal({ marketData, positions }: Readonly<HomePageProps>) {
     <main className="p-4 bg-black min-h-[calc(100vh-56px)] flex flex-row gap-4">
       <div className="flex-1 flex flex-col gap-4 min-w-0 overflow-hidden">
         {isDone && (
-        <StrategyDetails name={'CCI EMA Strategy Details'}>
-          <div className="text-base space-y-1">
-            <dl>
-              <dt>Open Long</dt>
-              <dd className="pl-2">
-                {
-                  'EMA10 > EMA30 and Close Price > EMA30 when CCI 7 cross up 0 line'
-                }
-              </dd>
-              <dt>Close Long</dt>
-              <dd className="pl-2">{'CCI 7 > 150'}</dd>
-            </dl>
-            <dl className="border-t border-b border-white mb-2">
-              <dt>Open Short</dt>
-              <dd className="pl-2">
-                {
-                  'EMA10 < EMA30 and Close Price < EMA30 when CCI 7 cross down 0 line'
-                }
-              </dd>
-              <dt>Close Short</dt>
-              <dd className="pl-2">{'CCI 7 < -150'}</dd>
-            </dl>
-            <i>
-              🧠 Stop Loss & Take Profit: 2x ATR for Stop Loss, 3x ATR for Take
-              Profit
-            </i>
-          </div>
-        </StrategyDetails>
-      )}
+          <StrategyDetails name={'CCI EMA Strategy Details'}>
+            <div className="text-base space-y-1">
+              <dl>
+                <dt>Open Long</dt>
+                <dd className="pl-2">
+                  {
+                    'EMA10 > EMA30 and Close Price > EMA30 when CCI 7 cross up 0 line'
+                  }
+                </dd>
+                <dt>Close Long</dt>
+                <dd className="pl-2">{'CCI 7 > 150'}</dd>
+              </dl>
+              <dl className="border-t border-b border-white mb-2">
+                <dt>Open Short</dt>
+                <dd className="pl-2">
+                  {
+                    'EMA10 < EMA30 and Close Price < EMA30 when CCI 7 cross down 0 line'
+                  }
+                </dd>
+                <dt>Close Short</dt>
+                <dd className="pl-2">{'CCI 7 < -150'}</dd>
+              </dl>
+              <i>
+                🧠 Stop Loss & Take Profit: 2x ATR for Stop Loss, 3x ATR for Take
+                Profit
+              </i>
+            </div>
+          </StrategyDetails>
+        )}
         <div className="flex-1 min-h-[400px]">
           <CandlestickChartReplayWithPositions
-              onOrdersUpdate={setExecutedOrders}
-              title="ETH/USDT"
-              initialBalance={10000}
-              candlesticks={marketData}
-              positions={positions}
-              setChart={setChart}
-              onFinish={onFinish}
-              onTick={setCandles}
-            />
+            onOrdersUpdate={setExecutedOrders}
+            title="DOGE/USDT"
+            initialBalance={10000}
+            candlesticks={marketData}
+            positions={positions}
+            setChart={setChart}
+            onFinish={onFinish}
+            onTick={setCandles}
+          />
         </div>
         <div className="relative h-[150px] shrink-0 border border-white/10 rounded-lg overflow-hidden">
           <div className="absolute z-10 top-2.5 left-2 bg-black/80 p-1 rounded text-sm text-white">

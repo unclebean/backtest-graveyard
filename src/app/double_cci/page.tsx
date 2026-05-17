@@ -24,13 +24,13 @@ function HomePageInternal({ marketData, positions }: Readonly<HomePageProps>) {
 
   const [showOverlay, setShowOverlay] = useState(true);
   const [candles, setCandles] = useState([] as CandlestickData[]);
-        const [isDone, setIsDone] = useState(false);
-  
+  const [isDone, setIsDone] = useState(false);
+
   const onFinish = useCallback(() => {
     setIsDone(true);
   }, []);
 
-  
+
   useEma({
     candlesChart: candlestickChart,
     candlesticks: candles,
@@ -86,10 +86,10 @@ function HomePageInternal({ marketData, positions }: Readonly<HomePageProps>) {
     <main className="p-4 bg-black min-h-[calc(100vh-56px)] flex flex-row gap-4">
       <div className="flex-1 flex flex-col gap-4 min-w-0 overflow-hidden">
         <div className="flex-1 min-h-[400px]">
-            <div className="min-h-[400px]">
+          <div className="min-h-[400px]">
             <CandlestickChartReplayWithPositions
               onOrdersUpdate={setExecutedOrders}
-              title="ETH/USDT"
+              title="DOGE/USDT"
               initialBalance={10000}
               candlesticks={marketData}
               positions={positions}
@@ -98,11 +98,11 @@ function HomePageInternal({ marketData, positions }: Readonly<HomePageProps>) {
               onTick={setCandles}
             />
           </div>
-          </div>
-          <div className="relative h-[150px] shrink-0 border border-white/10 rounded-lg overflow-hidden">
+        </div>
+        <div className="relative h-[150px] shrink-0 border border-white/10 rounded-lg overflow-hidden">
           <div className="absolute z-10 top-2.5 left-2 bg-black/80 p-1 rounded text-sm text-white">
             CCI 25 CCI 50
-            
+
           </div>
           <div ref={indicatorCharthRef} className="w-full h-full" />
         </div>

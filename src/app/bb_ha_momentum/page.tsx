@@ -24,13 +24,13 @@ function HomePageInternal({ marketData, positions }: Readonly<HomePageProps>) {
 
   const [showOverlay, setShowOverlay] = useState(true);
   const [candles, setCandles] = useState([] as CandlestickData[]);
-        const [isDone, setIsDone] = useState(false);
-  
+  const [isDone, setIsDone] = useState(false);
+
   const onFinish = useCallback(() => {
     setIsDone(true);
   }, []);
 
-  
+
   useBollingerBands({
     candlesChart: candlestickChart,
     candlesticks: candles,
@@ -86,11 +86,11 @@ function HomePageInternal({ marketData, positions }: Readonly<HomePageProps>) {
   return (
     <main className="p-4 bg-black min-h-[calc(100vh-56px)] flex flex-row gap-4">
       <div className="flex-1 flex flex-col gap-4 min-w-0 overflow-hidden">
-        
+
         <div className="flex-1 min-h-[400px]">
           <CandlestickChartReplayWithPositions
-              onOrdersUpdate={setExecutedOrders}
-            title="ETH/USDT"
+            onOrdersUpdate={setExecutedOrders}
+            title="EUR/USD"
             initialBalance={10000}
             candlesticks={marketData}
             positions={positions}
