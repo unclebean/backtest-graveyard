@@ -339,8 +339,8 @@ export const CandlestickChartReplay = ({
 
   return (
     <div className="flex flex-col w-full h-full relative border border-white/10 rounded-lg overflow-hidden">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-[#151924] border-b border-white/10 text-white px-4 py-2 z-10 gap-4 shrink-0 sm:h-[52px]">
-        <div className="flex items-center gap-4 w-full sm:w-auto">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-[#151924] border-b border-white/10 text-white px-4 py-3 sm:py-2 z-10 gap-3 sm:gap-4 shrink-0 sm:h-[52px]">
+        <div className="flex flex-wrap items-center justify-between sm:justify-start gap-3 sm:gap-4 w-full sm:w-auto">
           <h4 className="text-lg font-bold tracking-tight shrink-0">{title}</h4>
           {currentOrder && (
             <div className="flex items-center gap-4 bg-white/5 border border-white/10 px-4 py-0.5 rounded-lg shrink-0">

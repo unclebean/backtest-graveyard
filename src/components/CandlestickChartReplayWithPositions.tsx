@@ -188,7 +188,7 @@ export const CandlestickChartReplayWithPositions = ({
               const isClose = position.result !== undefined;
               const signal = position.entry_signal?.toLowerCase();
               const isSell = position.position === 'aboveBar';
-              
+
               let actionText = '';
               if (signal === 'short') {
                 actionText = isClose ? 'CLOSE SHORT' : 'OPEN SHORT';
@@ -254,10 +254,10 @@ export const CandlestickChartReplayWithPositions = ({
 
   return (
     <div className="flex flex-col w-full h-full relative border border-white/10 rounded-lg overflow-hidden">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-[#151924] border-b border-white/10 text-white px-4 py-2 z-10 gap-4 shrink-0 sm:h-[52px]">
-        <div className="flex items-center gap-4 w-full sm:w-auto">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-[#151924] border-b border-white/10 text-white px-4 py-3 sm:py-2 z-10 gap-3 sm:gap-4 shrink-0 sm:h-[52px]">
+        <div className="flex flex-wrap items-center justify-between sm:justify-start gap-3 sm:gap-4 w-full sm:w-auto">
           <h4 className="text-lg font-bold tracking-tight shrink-0">{title}</h4>
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-3 shrink-0">
             <div className="flex items-center gap-1.5 bg-green-500/10 border border-green-500/20 px-2 py-0.5 rounded-md text-green-400 shrink-0">
               <span className="text-[10px] uppercase tracking-wider font-extrabold opacity-90">WIN</span>
               <span className="font-bold text-xs sm:text-sm leading-none">{win}</span>
