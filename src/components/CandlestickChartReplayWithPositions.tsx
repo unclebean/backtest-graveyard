@@ -1,4 +1,3 @@
-import { useIsMobile } from '@/lib/useIsMobile';
 import { useEffect, useRef, useState } from 'react';
 import { useChartResize } from '@/hooks/useChartResize';
 import {
@@ -26,7 +25,6 @@ export const CandlestickChartReplayWithPositions = ({
   onTick,
   onOrdersUpdate,
 }: CandlestickReplayChartWithPositionsProps & { onOrdersUpdate?: (orders: OrderLog[]) => void }) => {
-  const isMobile = useIsMobile();
   const candlestickChartRef = useRef<HTMLDivElement>(null);
   const [historyData, setHistoryData] = useState<CandlestickData[]>([]);
   const [newData, setNewData] = useState<CandlestickData[]>([]);

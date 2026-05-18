@@ -1,4 +1,3 @@
-import { useIsMobile } from '@/lib/useIsMobile';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   CandlestickData,
@@ -25,7 +24,6 @@ export const CandlestickChartReplay = ({
   onTick,
   onOrdersUpdate,
 }: CandlestickReplayChartProps & { onTick?: (candles: CandlestickData[]) => void; onOrdersUpdate?: (orders: OrderLog[]) => void }) => {
-  const isMobile = useIsMobile();
   const candlestickChartRef = useRef<HTMLDivElement>(null);
   const [historyData, setHistoryData] = useState<CandlestickData[]>([]);
   const [newData, setNewData] = useState<CandlestickData[]>([]);
