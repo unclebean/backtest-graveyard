@@ -11,7 +11,9 @@ const loadBacktestData = async ({ symbol, strategy }: ITradeDataParams) => {
 
 export const useBacktestData = (tradeDataParams: ITradeDataParams) => {
   return useQuery({
-    queryKey: ['candles'],
+    queryKey: ['candles', tradeDataParams.symbol, tradeDataParams.strategy],
     queryFn: () => loadBacktestData(tradeDataParams),
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
   });
 };

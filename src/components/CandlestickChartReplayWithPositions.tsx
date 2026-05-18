@@ -138,7 +138,7 @@ export const CandlestickChartReplayWithPositions = ({
     return () => {
       chart.remove();
     };
-  }, [historyData, isMobile]);
+  }, [historyData]);
 
   // Force initial viewport to the start position AFTER indicators have loaded
   useEffect(() => {

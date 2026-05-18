@@ -113,7 +113,7 @@ export const CandlestickChartReplay = ({
     return () => {
       chart.remove();
     };
-  }, [historyData, isMobile]);
+  }, [historyData]);
 
   const dealLimitOrder = useCallback(
     (newTick: CandlestickData<Time>) => {
