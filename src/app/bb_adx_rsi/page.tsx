@@ -13,6 +13,7 @@ import { useAdxChart } from '@/hooks/useAdxChart';
 import { useRsiChart } from '@/hooks/useRsiChart';
 import { useBacktestData } from '@/hooks/useBacktestData';
 import StrategyStatsCard from '@/components/StrategyStatsCard';
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
 interface HomePageProps {
   marketData: CandlestickData[];
@@ -179,7 +180,7 @@ export default function HomePage() {
   });
 
   if (isLoading) {
-    return 'loading...';
+    return <LoadingSpinner />;
   }
 
   return (

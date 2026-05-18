@@ -11,6 +11,7 @@ import StrategyStatsCard from '@/components/StrategyStatsCard';
 import { Square } from 'lucide-react';
 import { useHeikinAshiMomentumChart } from '@/hooks/useHeikinAshiMomentumChart';
 import { useBollingerBands } from '@/hooks/useBollingerBands';
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
 import { useChartSync } from '@/hooks/useChartSync';
 
@@ -102,7 +103,7 @@ export default function HomePage() {
     strategy: 'bb_mom',
   });
   if (isLoading) {
-    return 'loading...';
+    return <LoadingSpinner />;
   }
 
   return (

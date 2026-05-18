@@ -6,6 +6,7 @@ import { useReplayData } from '@/hooks/useChartReplayData';
 import { CandlestickChartReplay } from '@/components/CandlestickChartReplay';
 import { IOrder } from '@/types/trade';
 import { useState } from 'react';
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
 interface HomePageProps {
   marketData: CandlestickData[];
@@ -30,7 +31,7 @@ export default function HomePage() {
     strategy: '',
   });
   if (isLoading) {
-    return 'loading...';
+    return <LoadingSpinner />;
   }
 
   return <HomePageInternal marketData={data.marketData} />;

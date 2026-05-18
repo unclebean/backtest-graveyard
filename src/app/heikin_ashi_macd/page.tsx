@@ -11,6 +11,7 @@ import { OrderLog, OrdersTable } from '@/components/OrdersTable';
 import { useBacktestData } from '@/hooks/useBacktestData';
 import StrategyStatsCard from '@/components/StrategyStatsCard';
 import { useHeikinAshiData } from '@/hooks/useHeikinAshiData';
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
 import { useChartSync } from '@/hooks/useChartSync';
 
@@ -93,7 +94,7 @@ export default function HomePage() {
     strategy: 'heikin_ashi_macd',
   });
   if (isLoading) {
-    return 'loading...';
+    return <LoadingSpinner />;
   }
 
   return (

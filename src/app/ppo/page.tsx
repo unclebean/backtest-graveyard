@@ -6,6 +6,7 @@ import { Position } from '@/types/chart';
 import { OrderLog, OrdersTable } from '@/components/OrdersTable';
 import { useBacktestData } from '@/hooks/useBacktestData';
 import StrategyStatsCard from '@/components/StrategyStatsCard';
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
 import { CandlestickChartReplayWithPositions } from '@/components/CandlestickChartReplayWithPositions';
 
@@ -67,7 +68,7 @@ export default function HomePage() {
   });
 
   if (isLoading) {
-    return 'loading...';
+    return <LoadingSpinner />;
   }
 
   return (

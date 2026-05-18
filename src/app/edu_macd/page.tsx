@@ -7,6 +7,7 @@ import { useRef, useState } from 'react';
 import { Square } from 'lucide-react';
 import { useMACDChart } from '@/hooks/useMACDChart';
 import { OrderLog, OrdersTable } from '@/components/OrdersTable';
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
 import { useChartSync } from '@/hooks/useChartSync';
 
@@ -68,7 +69,7 @@ export default function HomePage() {
     strategy: '',
   });
   if (isLoading) {
-    return 'loading...';
+    return <LoadingSpinner />;
   }
 
   return <HomePageInternal marketData={data.marketData} />;

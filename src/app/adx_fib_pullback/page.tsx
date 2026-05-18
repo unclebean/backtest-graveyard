@@ -9,6 +9,7 @@ import StrategyStatsCard from '@/components/StrategyStatsCard';
 
 import { useAdxChart } from '@/hooks/useAdxChart';
 import { CandlestickChartReplayWithPositions } from '@/components/CandlestickChartReplayWithPositions';
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
 import { useChartSync } from '@/hooks/useChartSync';
 
@@ -88,7 +89,7 @@ export default function HomePage() {
   });
 
   if (isLoading) {
-    return 'loading...';
+    return <LoadingSpinner />;
   }
 
   return (

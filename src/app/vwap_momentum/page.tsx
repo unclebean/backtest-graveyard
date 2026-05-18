@@ -13,6 +13,7 @@ import { useAdxChart } from '@/hooks/useAdxChart';
 import { useVwap } from '@/hooks/useVwap';
 import { useVwapData } from '@/hooks/useVwapData';
 import { IVwap } from '@/types/trade';
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
 import { useChartSync } from '@/hooks/useChartSync';
 
@@ -124,7 +125,7 @@ export default function HomePage() {
   const vwapResult = useVwapData({ symbol: SYMBOL, strategy: STRATEGY });
 
   if (isLoading || vwapResult.isLoading) {
-    return 'loading...';
+    return <LoadingSpinner />;
   }
 
   return (

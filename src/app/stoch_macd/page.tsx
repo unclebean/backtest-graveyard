@@ -12,6 +12,7 @@ import { Position } from '@/types/chart';
 import { OrderLog, OrdersTable } from '@/components/OrdersTable';
 import { useBacktestData } from '@/hooks/useBacktestData';
 import StrategyStatsCard from '@/components/StrategyStatsCard';
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
 interface HomePageProps {
   marketData: CandlestickData[];
@@ -166,7 +167,7 @@ export default function HomePage() {
     strategy: 'stoch_macd',
   });
   if (isLoading) {
-    return 'loading...';
+    return <LoadingSpinner />;
   }
 
   return (

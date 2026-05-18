@@ -12,6 +12,7 @@ import { useCciChart } from '@/hooks/useCciChart';
 import { useEma } from '@/hooks/useEma';
 import { useBacktestData } from '@/hooks/useBacktestData';
 import StrategyStatsCard from '@/components/StrategyStatsCard';
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
 import { useChartSync } from '@/hooks/useChartSync';
 
@@ -133,7 +134,7 @@ export default function HomePage() {
   });
 
   if (isLoading) {
-    return 'loading...';
+    return <LoadingSpinner />;
   }
 
   return (

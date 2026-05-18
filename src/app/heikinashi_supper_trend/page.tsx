@@ -12,6 +12,7 @@ import { useHeikinAshiData } from '@/hooks/useHeikinAshiData';
 import { useSupperTrend } from '@/hooks/useSupperTrend';
 import { useBacktestData } from '@/hooks/useBacktestData';
 import StrategyStatsCard from '@/components/StrategyStatsCard';
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
 interface HomePageProps {
   marketData: CandlestickData[];
@@ -114,7 +115,7 @@ export default function HomePage() {
   });
 
   if (isLoading) {
-    return 'loading...';
+    return <LoadingSpinner />;
   }
 
   return (
