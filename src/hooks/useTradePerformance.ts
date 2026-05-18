@@ -80,7 +80,7 @@ export const useTradePerformance = (tradeDataParams: ITradeDataParams) => {
     queryFn: () => loadTrades(tradeDataParams),
   });
   const tradePerformance = useMemo(() => {
-    if (isLoading) return {} as ITradePerformance;
+    if (isLoading || !data) return {} as ITradePerformance;
     const { trades, initialPrice, finalPrice } =
       data as ITradePerformanceResponse;
     return calculatePerformance(
@@ -90,5 +90,10 @@ export const useTradePerformance = (tradeDataParams: ITradeDataParams) => {
       finalPrice,
     );
   }, [data, isLoading, tradeDataParams.symbol]);
-  return { data: tradePerformance, isLoading };
+  return {
+    data: tradePerformance,
+    isLoading,
+    startDate: data?.startDate,
+    endDate: data?.endDate,
+  };
 };

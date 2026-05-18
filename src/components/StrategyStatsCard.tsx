@@ -9,9 +9,11 @@ import {
   BarChart2,
   BarChart3,
   PlayCircle,
+  Calendar,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTradePerformance } from '@/hooks/useTradePerformance';
+import dayjs from 'dayjs';
 
 interface StrategyStatsCardProps {
   name: string;
@@ -28,7 +30,7 @@ export default function StrategyStatsCard({
   onStartAction,
   subTitle,
 }: Readonly<StrategyStatsCardProps>) {
-  const { data, isLoading } = useTradePerformance({ symbol, strategy });
+  const { data, isLoading, startDate, endDate } = useTradePerformance({ symbol, strategy });
 
   if (isLoading) {
     return null;
@@ -43,6 +45,24 @@ export default function StrategyStatsCard({
             <div className="text-sm font-bold text-center">{subTitle}</div>
           )}
         </h2>
+
+        {startDate && endDate && (
+          <div className="flex flex-col items-center justify-center p-3 bg-white/[0.03] border border-white/10 rounded-xl space-y-1.5 shadow-inner">
+            <div className="flex items-center space-x-1.5 text-indigo-400 text-xs font-semibold uppercase tracking-wider">
+              <Calendar className="w-3.5 h-3.5" />
+              <span>Backtest Period</span>
+            </div>
+            <div className="text-xs font-medium text-neutral-300 text-center flex items-center justify-center gap-2">
+              <span className="bg-white/[0.05] px-2 py-0.5 rounded text-neutral-200">
+                {dayjs(startDate).format('YYYY-MM-DD HH:mm')}
+              </span>
+              <span className="text-neutral-500">→</span>
+              <span className="bg-white/[0.05] px-2 py-0.5 rounded text-neutral-200">
+                {dayjs(endDate).format('YYYY-MM-DD HH:mm')}
+              </span>
+            </div>
+          </div>
+        )}
 
         <div className="flex justify-between items-center gap-2">
           <div className="flex items-center space-x-2">

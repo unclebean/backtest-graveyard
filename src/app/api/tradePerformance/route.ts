@@ -44,10 +44,20 @@ const getAllTrades = async (symbol: string, strategy: string) => {
       record.date === secondTrade.exit_date.replaceAll('.000000', ''),
   )) ?? { close: 0 };
 
+  const startDateStr = '2024-01-01 00:00:00';
+  const filteredRecords = records.filter(
+    (r) => new Date(r.date) >= new Date(startDateStr),
+  );
+  const targetRecords = filteredRecords.length > 0 ? filteredRecords : records;
+  const firstCandleDate = targetRecords[0]?.date;
+  const lastCandleDate = targetRecords[targetRecords.length - 1]?.date;
+
   return {
     trades,
     initialPrice: initialCandleBar.close,
     finalPrice: finalCandleBar.close,
+    startDate: firstCandleDate,
+    endDate: lastCandleDate,
   };
 };
 

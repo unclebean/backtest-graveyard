@@ -41,6 +41,8 @@ export interface ITradePerformanceResponse {
   trades: ITrade[];
   initialPrice: number;
   finalPrice: number;
+  startDate?: string;
+  endDate?: string;
 }
 
 export interface ITradeDataParams {
