@@ -284,7 +284,9 @@ export default function StrategyStatsCard({
                 Ready
               </span>
             </h2>
-            <div className="text-xs text-neutral-400 font-medium">Desktop Analytics Engine</div>
+            <div className="text-xs text-neutral-400 font-medium">
+              {strategy.split('_').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')} Performance Engine
+            </div>
           </div>
         </div>
 
