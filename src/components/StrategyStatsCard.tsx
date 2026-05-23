@@ -26,6 +26,7 @@ import {
   createChart,
   BaselineSeries,
   HistogramSeries,
+  LineSeries,
   IChartApi,
 } from 'lightweight-charts';
 
@@ -57,6 +58,40 @@ export default function StrategyStatsCard({
   const [showBuyHold, setShowBuyHold] = useState(false);
   const [showVolatility, setShowVolatility] = useState(false);
   const [showDrawdown, setShowDrawdown] = useState(false);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const equitySeriesRef = useRef<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const buyAndHoldSeriesRef = useRef<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const drawdownSeriesRef = useRef<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const volatilitySeriesRef = useRef<any>(null);
+
+  // Sync visibility choices without chart re-creation
+  useEffect(() => {
+    if (equitySeriesRef.current) {
+      equitySeriesRef.current.applyOptions({ visible: showEquity });
+    }
+  }, [showEquity]);
+
+  useEffect(() => {
+    if (buyAndHoldSeriesRef.current) {
+      buyAndHoldSeriesRef.current.applyOptions({ visible: showBuyHold });
+    }
+  }, [showBuyHold]);
+
+  useEffect(() => {
+    if (drawdownSeriesRef.current) {
+      drawdownSeriesRef.current.applyOptions({ visible: showDrawdown });
+    }
+  }, [showDrawdown]);
+
+  useEffect(() => {
+    if (volatilitySeriesRef.current) {
+      volatilitySeriesRef.current.applyOptions({ visible: showVolatility });
+    }
+  }, [showVolatility]);
 
   useEffect(() => {
     if (activeTab !== 'metrics' || !chartContainerRef.current || !data?.equityCurve || data.equityCurve.length === 0) {
@@ -112,7 +147,40 @@ export default function StrategyStatsCard({
       lineWidth: 2,
       priceLineVisible: false,
       lastValueVisible: true,
+      visible: showEquity,
     });
+    equitySeriesRef.current = baselineSeries;
+
+    // Add Line Series for Buy & Hold
+    const buyHoldSeries = chart.addSeries(LineSeries, {
+      color: '#9ca3af',
+      lineWidth: 2,
+      lineStyle: 2, // dashed
+      priceLineVisible: false,
+      lastValueVisible: false,
+      visible: showBuyHold,
+    });
+    buyAndHoldSeriesRef.current = buyHoldSeries;
+
+    // Add Line Series for Drawdowns
+    const drawdownSeries = chart.addSeries(LineSeries, {
+      color: '#ef4444',
+      lineWidth: 2,
+      priceLineVisible: false,
+      lastValueVisible: false,
+      visible: showDrawdown,
+    });
+    drawdownSeriesRef.current = drawdownSeries;
+
+    // Add Line Series for Volatility
+    const volatilitySeries = chart.addSeries(LineSeries, {
+      color: '#eab308',
+      lineWidth: 2,
+      priceLineVisible: false,
+      lastValueVisible: false,
+      visible: showVolatility,
+    });
+    volatilitySeriesRef.current = volatilitySeries;
 
     // Add Histogram Series for individual trade results at the bottom
     const histogramSeries = chart.addSeries(HistogramSeries, {
@@ -120,8 +188,29 @@ export default function StrategyStatsCard({
       lastValueVisible: false,
     });
 
-    // Set scale margins to separate both curves on the same chart
+    // Set scale margins to separate curves on the same chart
     baselineSeries.priceScale().applyOptions({
+      scaleMargins: {
+        top: 0.1,
+        bottom: 0.35,
+      },
+    });
+
+    buyHoldSeries.priceScale().applyOptions({
+      scaleMargins: {
+        top: 0.1,
+        bottom: 0.35,
+      },
+    });
+
+    drawdownSeries.priceScale().applyOptions({
+      scaleMargins: {
+        top: 0.1,
+        bottom: 0.35,
+      },
+    });
+
+    volatilitySeries.priceScale().applyOptions({
       scaleMargins: {
         top: 0.1,
         bottom: 0.35,
@@ -138,6 +227,12 @@ export default function StrategyStatsCard({
     // Set data
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     baselineSeries.setData(data.equityCurve as any);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    buyHoldSeries.setData((data as any).buyAndHoldCurve as any);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    drawdownSeries.setData((data as any).drawdownCurve as any);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    volatilitySeries.setData((data as any).volatilityCurve as any);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     histogramSeries.setData(data.tradePnLHistory as any);
 
@@ -156,6 +251,7 @@ export default function StrategyStatsCard({
       chart.remove();
       chartRef.current = null;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab, data?.equityCurve, data?.tradePnLHistory]);
 
   if (isLoading) {
@@ -370,8 +466,8 @@ export default function StrategyStatsCard({
                   </span>
                 </label>
 
-                {/* Buy & Hold Toggle (Disabled mockup) */}
-                <label className="flex items-center space-x-3 cursor-pointer group opacity-40">
+                {/* Buy & Hold Toggle */}
+                <label className="flex items-center space-x-3 cursor-pointer group">
                   <input
                     type="checkbox"
                     checked={showBuyHold}
@@ -379,33 +475,35 @@ export default function StrategyStatsCard({
                     className="w-4 h-4 rounded border-neutral-700 bg-neutral-900 text-[#2962ff] focus:ring-0 focus:ring-offset-0 cursor-pointer"
                   />
                   <span className="group-hover:text-white transition duration-100 flex items-center gap-1.5">
-                    <span className="w-2.5 h-2.5 rounded bg-neutral-500"></span>
+                    <span className="w-2.5 h-2.5 rounded bg-neutral-400 border border-neutral-300/30"></span>
                     Buy and Hold
                   </span>
                 </label>
 
-                {/* Trade Fluctuation Toggle (Disabled mockup) */}
-                <label className="flex items-center space-x-3 cursor-pointer group opacity-40">
+                {/* Trade Fluctuation Toggle */}
+                <label className="flex items-center space-x-3 cursor-pointer group">
                   <input
                     type="checkbox"
                     checked={showVolatility}
                     onChange={(e) => setShowVolatility(e.target.checked)}
                     className="w-4 h-4 rounded border-neutral-700 bg-neutral-900 text-[#2962ff] focus:ring-0 focus:ring-offset-0 cursor-pointer"
                   />
-                  <span className="group-hover:text-white transition duration-100">
+                  <span className="group-hover:text-white transition duration-100 flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded bg-yellow-500 border border-yellow-400/30"></span>
                     Trade Volatility
                   </span>
                 </label>
 
-                {/* Run-up / Drawdown Toggle (Disabled mockup) */}
-                <label className="flex items-center space-x-3 cursor-pointer group opacity-40">
+                {/* Run-up / Drawdown Toggle */}
+                <label className="flex items-center space-x-3 cursor-pointer group">
                   <input
                     type="checkbox"
                     checked={showDrawdown}
                     onChange={(e) => setShowDrawdown(e.target.checked)}
                     className="w-4 h-4 rounded border-neutral-700 bg-neutral-900 text-[#2962ff] focus:ring-0 focus:ring-offset-0 cursor-pointer"
                   />
-                  <span className="group-hover:text-white transition duration-100">
+                  <span className="group-hover:text-white transition duration-100 flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded bg-rose-500 border border-rose-400/30"></span>
                     Drawdown Layers
                   </span>
                 </label>

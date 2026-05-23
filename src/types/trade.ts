@@ -38,6 +38,9 @@ export interface ITradePerformance {
   profitFactor: number;
   equityCurve: { time: number; value: number }[];
   tradePnLHistory: { time: number; value: number; color: string }[];
+  buyAndHoldCurve: { time: number; value: number }[];
+  drawdownCurve: { time: number; value: number }[];
+  volatilityCurve: { time: number; value: number }[];
 }
 
 export interface ITradePerformanceResponse {
