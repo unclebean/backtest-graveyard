@@ -174,7 +174,7 @@ export default function StrategyStatsCard({
   const isNetProfitPositive = data.netProfit >= 0;
 
   return (
-    <Card className="max-w-6xl w-full mx-auto bg-[#131722] border border-[#2a2e39] text-[#d1d4dc] rounded-2xl shadow-2xl overflow-hidden backdrop-blur-md">
+    <Card className="w-full max-w-full mx-auto bg-[#131722] border border-[#2a2e39] text-[#d1d4dc] rounded-2xl shadow-2xl overflow-hidden backdrop-blur-md">
       {/* Header Panel */}
       <div className="bg-[#1c2030]/80 px-6 py-4 border-b border-[#2a2e39] flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div className="flex items-center space-x-3">
