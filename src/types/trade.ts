@@ -35,6 +35,9 @@ export interface ITradePerformance {
   win: number;
   loss: number;
   winRate: number;
+  profitFactor: number;
+  equityCurve: { time: number; value: number }[];
+  tradePnLHistory: { time: number; value: number; color: string }[];
 }
 
 export interface ITradePerformanceResponse {
